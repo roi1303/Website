@@ -1,0 +1,25 @@
+@model RoiWeb.Models.UserModel
+
+<div>
+    <h1>Log In</h1>
+    
+    <form action="/home/LoginGet" method="get">
+
+        <div class="form-group">
+            <label for="Username">Username</label>
+            <input asp-for="Username" value="" type="text" class="form-control" id="Username" placeholder="Enter Username" required>
+            <br>
+            @if(ViewBag.Error != null){
+                <span class="text-danger">@ViewBag.Error</span>
+            }
+        </div>
+
+         <div class="form-group">
+            <label for="Password">Password</label>
+            <input value="" asp-validation-for="Password" asp-for="Password" type="password" class="form-control" id="Password" placeholder="Password" required>
+            <br>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
+</div>

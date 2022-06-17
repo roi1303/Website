@@ -1,0 +1,148 @@
+@model RoiWeb.Models.UserModel
+
+@{
+  
+    UserModel user = TempData["userEdit"]  as UserModel;
+}
+
+<div>
+
+    <head>
+  
+    <title>Toggle Password Visibility</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  
+    <style>
+        form i {
+            margin-left: 97%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+    <h1>User Update Manager</h1>
+
+   <div>
+    <form id="FormAddUser" method="post" action="/home/UpdateUserManagerForm">
+        <input type="hidden" name="id" value="@user.Id" />
+        <div class="form-group">
+            <label for="Username">Username</label>
+            <input maxlength="17" type="text" class="form-control" id="Username" placeholder="Enter Username" asp-validation-for="Username" asp-for="Username" value="@user.Username" required>
+            <span asp-validation-for="Username" id="username_span" class="text-danger"></span>
+            <br>
+            @if(ViewBag.Error != null){
+                
+            }
+        </div>
+
+        <div class="form-group">
+            <label for="Email">Email address</label>
+            <input type="email" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Enter email" asp-for="Email" value="@user.Email" required>
+            <span asp-validation-for="Username" class="text-danger"></span>
+            <br>
+        </div>
+
+        <div class="form-group">
+            <p>
+                <label for="Password">Password</label>
+                <input name="password" type="password" class="form-control" id="Password" placeholder="Password" asp-for="Password" value="@user.Password" required>
+                <i onclick="showPassword()" class="bi bi-eye-slash" id="togglePassword"></i>
+            </p>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button onclick="checkForm()" type="submit" class="btn btn-primary">Save</button>
+
+    </form>
+
+    <form id="CheckUsername" action="/home/SignUpPost">
+
+    </form>
+    
+
+    <script>
+        var formUsername = document.getElementById("CheckUsername");
+
+        //vars for restore the value of the input
+        var username = document.getElementById("Username");
+        var email = document.getElementById("Email");
+        var Password = document.getElementById("Password");
+        var username_span = document.getElementById("username_span");
+
+        //create vars to helper function OnPassword()
+        var lowercase = /[a-z]/g;
+        var uppercase = /[A-Z]/g;
+        var numbers = /[0-9]/g;
+        var length = /.{8,}/g;
+
+        //input validation username
+        function OnUserName() {
+
+            if (username.value.length < 4) {
+                username_span.style.display = "block";
+                username_span.innerHTML = "Username must be at least 4 characters";
+                return false;
+            }
+            else {
+                username_span.style.display = "none";
+                return true;
+            }
+        }
+
+        //input validation password
+        function OnPassword(){
+
+            if(Password.value.match(lowercase) && Password.value.match(uppercase) && Password.value.match(numbers) && Password.value.match(length)){
+                document.getElementById("matchPassword").style.display="none";
+                return true;
+            }
+            else{
+                document.getElementById("matchPassword").style.display="block";
+                document.getElementById("matchPassword").innerHTML = "Password must contain at least one lowercase letter, one uppercase letter, one number, and be at least 8 characters long.";
+                return false;
+            }
+        }
+
+        //submit form
+        function checkForm(){
+            @{
+                using(var db = new UserContext()){
+                    var checkuser = db.Users.Where(x => x.Username == user.Username).FirstOrDefault();
+
+                    if(checkuser != null)
+                    {
+                        ViewBag.Error="username already exists";
+                    }
+                }
+            }
+            
+
+            if(OnUserName() && OnPassword() && matchPassword() /*&& @ViewBag.Error == null*/){
+                document.getElementById("FormAddUser").submit();
+                alert("Sign up success");
+                saving();
+            }
+            else{
+                alert("Sign up failed");
+            }
+        }
+        
+        function showPassword(){
+            var Password = document.getElementById("Password");
+            var togglePassword = document.getElementById("togglePassword");
+
+            if (Password.type === "password") {
+                Password.type = "text";
+                togglePassword.className = "bi bi-eye";
+            } else {
+                Password.type = "password";
+                togglePassword.className = "bi bi-eye-slash";
+            }
+        }
+
+        function saving(){
+            alert("Saving Data...");
+        }
+    </script>
+</div>

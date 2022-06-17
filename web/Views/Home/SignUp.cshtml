@@ -1,0 +1,118 @@
+@model RoiWeb.Models.UserModel
+
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<div>
+    <form name="FormAddUser" id="FormAddUser" method="post" action="/home/SignUpPost">
+        <div class="form-group">
+            <label for="Username">Username</label>
+            <input maxlength="30" onkeyup="OnUserName()" type="text" class="form-control" id="Username" placeholder="Enter Username" asp-for="Username" required>
+            <span asp-validation-for="Username" id="username_span" class="text-danger"></span>
+            @if(ViewBag.Error != null){
+                <span class="text-danger">@ViewBag.Error</span>
+            }
+            <br>
+        </div>
+
+        <div class="form-group">
+            <label for="Email">Email address</label>
+            <input minlength="9" maxlength="35" type="email" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Enter email" asp-for="Email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
+            <br>
+        </div>
+
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <input maxlength="20" onkeyup="OnPassword()" type="password" class="form-control" id="Password" placeholder="Password" asp-for="Password" required>
+            <small asp-validation-for="Password" class="text-danger" >We'll never share your password with anyone else.</small>
+            <br>
+            <span asp-validation-for="Password" class="text-danger"></span>
+            <br>
+            <span id="matchPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="ConPassword">Confirm Password</label>
+            <input onkeyup="matchPassword()" type="password" class="form-control" id="ConPassword" placeholder="Confirm Password">
+            <span id="conPasswordSpan" class="text-danger"></span>
+            <br>
+        </div>
+        
+        
+    </form><button onclick="checkForm()" type="submit" class="btn btn-primary">Submit</button>
+
+
+
+    <script>
+        //vars for restore the value of the input
+        var username = document.getElementById("Username");
+        var email = document.getElementById("Email");
+        var Password = document.getElementById("Password");
+        var conPassword = document.getElementById("ConPassword");
+        var username_span = document.getElementById("username_span");
+
+        //create vars to helper function OnPassword() 
+        var lowercase = /[a-z]/g;
+        var uppercase = /[A-Z]/g;
+        var numbers = /[0-9]/g;
+        var length = /.{8,}/g;
+
+        //input validation username
+        function OnUserName() {
+
+            if (username.value.length < 4) {
+                username_span.style.display = "block";
+                username_span.innerHTML = "Username must be at least 4 characters";
+                return false;
+            }
+            else {
+                username_span.style.display = "none";
+                return true;
+            }
+        }
+
+        //input validation password
+        function OnPassword(){
+            matchPassword();
+
+            if(Password.value.match(lowercase) && Password.value.match(uppercase) && Password.value.match(numbers) && Password.value.match(length)){
+                document.getElementById("matchPassword").style.display="none";
+                return true;
+            }
+            else{
+                document.getElementById("matchPassword").style.display="block";
+                document.getElementById("matchPassword").innerHTML = "Password must contain at least one lowercase letter, one uppercase letter, one number, and be at least 8 characters long.";
+                return false;
+            }
+        }
+        //input validation password && confirm password
+        function matchPassword(){
+            if(Password.value != conPassword.value){
+                document.getElementById("conPasswordSpan").style.display="block";
+                document.getElementById("conPasswordSpan").innerHTML = "Password not match";
+                return false;
+            }
+            else{
+                document.getElementById("conPasswordSpan").style.display="none";
+                return true;
+            }
+        }
+
+        //submit form
+        function checkForm(){
+            if(OnUserName() && OnPassword() && matchPassword()){
+                document.getElementById("FormAddUser").submit();
+                document.getElementsByName("FormAddUser").submit();
+                alert("Sign up success");
+            }
+            else{
+                alert("Sign up failed");
+            }
+        }
+        
+    </script>
+</div>
+
+

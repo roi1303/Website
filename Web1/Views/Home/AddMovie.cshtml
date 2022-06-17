@@ -1,0 +1,49 @@
+@model Movies.Models.MoviesModel
+@{
+    List<MoviesModel> Movies = TempData["Movies"] as List<MoviesModel>;
+}
+
+@if (User.Identity.IsAuthenticated) {
+ <form action="/Home/AddMovieForm" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" class="form-control" id="Title" placeholder="Enter Title" asp-for="Title"  minlength="2" maxlength="18" required>
+
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <input type="textarea" class="form-control" id="Description" placeholder="Description" asp-for="Description" required>
+
+    </div>
+
+
+
+
+
+    <div class="form-group">
+        <label for="Genre">Gnere</label>
+        <input type="textarea" class="form-control" id="Genre" placeholder="Genre" asp-for="Genre" required
+            minlength="2" maxlength="500" required>
+    </div>
+
+    
+    <div class="form-group">
+        <label for="ImageFile" class="control-label"></label>
+        <input asp-for="ImageFile" class="form-control" accept="image/png, image/gif, image/jpeg" required>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Add movie</button>
+ </form> 
+} else {
+    <div class="alert alert-danger">
+        <strong>You must be logged in to add a movie</strong>
+    </div>
+}
+
+
+
+
+ 

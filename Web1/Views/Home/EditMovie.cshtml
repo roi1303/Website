@@ -1,0 +1,44 @@
+@model Movies.Models.MoviesModel
+@{
+    MoviesModel movie = TempData["movieEdit"] as MoviesModel;
+}
+
+
+
+
+
+
+<form action="/Home/EditMovieForm" method="post" enctype="multipart/form-data">
+    <input name="Id" type="hidden" value="@movie.Id">
+      <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" class="form-control" id="Title" placeholder="Enter Title" asp-for="Title" value="@movie.Title"  minlength="2" maxlength="18" required>
+
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <input type="textarea" class="form-control" id="Description" placeholder="Description" value="@movie.Description"  asp-for="Description" required>
+
+    </div>
+
+
+
+
+
+    <div class="form-group">
+        <label for="Genre">Gnere</label>
+        <input type="textarea" class="form-control" id="Genre" placeholder="Genre" value="@movie.Genre"  asp-for="Genre"
+            minlength="2" maxlength="500" required>
+    </div>
+
+    
+    <div class="form-group">
+        <label for="ImageFile" class="control-label"></label>
+        <input asp-for="ImageFile" class="form-control" accept="image/png, image/gif, image/jpeg" value="@movie.ImageFile"  required>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">submit</button>
+ </form> 
